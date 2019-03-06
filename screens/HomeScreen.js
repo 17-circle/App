@@ -11,7 +11,7 @@ import {
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
-import { SDGCircle } from '../components/SDGCircle'
+import SDGCircle from '../components/SDGCircle'
 
 
 export default class HomeScreen extends React.Component {
