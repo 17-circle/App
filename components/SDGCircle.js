@@ -7,8 +7,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 
 const Container = styled(Animated.View)`
   margin: auto;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   position: relative;
   background-color: #ac5;
 `
@@ -121,7 +121,7 @@ export default class SDGCircle extends Component {
           transform: [{
             rotate: deltaAnim.interpolate({
               inputRange: [-200, 0, 200],
-              outputRange: ['-120deg', '0deg', '120deg']
+              outputRange: ['-360deg', '0deg', '360deg']
             })
           }]
         }}
