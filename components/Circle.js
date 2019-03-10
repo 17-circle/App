@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, Animated } from 'react-native'
 import styled from 'styled-components'
 
-const StyledCircle = styled(View)`
+const StyledCircle = styled(Animated.View)`
   position: absolute;
   width: ${props => props.radius*2};
   height: ${props => props.radius*2};
@@ -20,9 +20,7 @@ export default class Circle extends Component {
   render() {
     return (
       <StyledCircle
-        color={this.props.color}
-        style={{...this.props.style}}
-        radius={this.props.radius}
+        {...this.props} // radius, style, color
         onLayout={this.handleLayout}
         /* style={{borderRadius: Math.floor(this.state.width/2)}} */
       />
