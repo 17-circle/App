@@ -7,10 +7,10 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 
 const Container = styled(Animated.View)`
   margin: auto;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   position: relative;
-  background-color: #ac5;
+  top: 100px;
 `
 
 const circles = [{
@@ -21,33 +21,35 @@ const circles = [{
   color: 'green'
 }, {
   color: 'yellow'
-}, {
-  color: 'purple'
-}, {
-  color: 'black'
-}, {
-  color: 'gray'
-}, {
-  color: 'pink'
-}, {
-  color: 'lime'
-}, {
-  color: 'darkgreen'
-}, {
-  color: 'crimson'
-}, {
-  color: 'orange'
-}, {
-  color: 'cyan'
-}, {
-  color: 'navy'
-}, {
-  color: 'indigo'
-}, {
-  color: 'brown'
-}, {
-  color: 'peru'
-}]
+}
+//                  , {
+//   color: 'purple'
+// }, {
+//   color: 'black'
+// }, {
+//   color: 'gray'
+// }, {
+//   color: 'pink'
+// }, {
+//   color: 'lime'
+// }, {
+//   color: 'darkgreen'
+// }, {
+//   color: 'crimson'
+// }, {
+//   color: 'orange'
+// }, {
+//   color: 'cyan'
+// }, {
+//   color: 'navy'
+// }, {
+//   color: 'indigo'
+// }, {
+//   color: 'brown'
+// }, {
+//   color: 'peru'
+// }
+                ]
 
 function withFunction(callback) {
   let inputRange = [], outputRange = [], steps = 50;
@@ -72,21 +74,26 @@ export default class SDGCircle extends Component {
   offset = () => parseInt(this.state.container.width/2)-this.state.radius
 
   _panResponder = PanResponder.create({
+    nMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
     onMoveShouldSetPanResponder: (event, gestureState) => true,
     onPanResponderGrant: () => {
-      console.log('grant')
-      this.state.deltaAnim.setOffset(this.state.deltaAnim._value)
+      const { deltaAnim } = this.state
+      deltaAnim.setOffset(deltaAnim._offset + deltaAnim._value)
+      deltaAnim.setValue(0)
     },
     onPanResponderMove: (event, gestureState) => {
-      this.state.deltaAnim.setValue(gestureState.dx)
+      const { deltaAnim } = this.state
+      deltaAnim.setValue(gestureState.dx)
+      // console.log('move \t', deltaAnim._value, '\t', deltaAnim._offset )
     },
     onPanResponderRelease: (event, gestureState) => {
-      const {dx, vx} = gestureState
-      const {deltaAnim} = this.state
-      const handlerValue = Math.abs(dx) > SCREEN_WIDTH / 8 || Math.abs(vx) > 1.3 ? this.getAmountForNextSlice(dx, deltaAnim._offset) : this.snapOffset(deltaAnim._offset);
-      Animated.spring(deltaAnim, {
-        toValue: handlerValue
-      }).start()
+      // this.state.deltaAnim.setOffset(this.state.deltaAnim._value)
+      // const {dx, vx} = gestureState
+      // const {deltaAnim} = this.state
+      // const handlerValue = Math.abs(dx) > SCREEN_WIDTH / 8 || Math.abs(vx) > 1.3 ? this.getAmountForNextSlice(dx, deltaAnim._offset) : this.snapOffset(deltaAnim._offset);
+      // Animated.spring(deltaAnim, {
+      //   toValue: handlerValue
+      // }).start()
       // }).start(() => this.simplifyOffset(this.pan._value));
     }
   })
@@ -95,10 +102,10 @@ export default class SDGCircle extends Component {
     // This just rounds to the nearest 200 to snap the circle to the correct thirds
     const snappedOffset = this.snapOffset(offset);
     // Depending on the direction, we either add 200 or subtract 200 to calculate new offset position.
-    const newOffset = dx > 0 ? snappedOffset + 200 : snappedOffset - 200;
+    const newOffset = dx > 0 ? snappedOffset + 100 : snappedOffset - 100;
     return newOffset;
   }
-  snapOffset = (offset) => { return Math.round(offset / 200) * 200; }
+  snapOffset = (offset) => { return Math.round(offset / 100) * 100; }
 
   handleLayout = ({ nativeEvent }) => {
     this.setState({
@@ -121,7 +128,7 @@ export default class SDGCircle extends Component {
           transform: [{
             rotate: deltaAnim.interpolate({
               inputRange: [-200, 0, 200],
-              outputRange: ['-360deg', '0deg', '360deg']
+              outputRange: ['-120deg', '0deg', '120deg']
             })
           }]
         }}
@@ -137,8 +144,11 @@ export default class SDGCircle extends Component {
               style={{
                 left: Math.sin(index*deltaTheta*Math.PI/180)*Radius+this.offset(),
                 top: Math.cos(index*deltaTheta*Math.PI/180)*Radius+this.offset(),
+
               }}
-            />
+            >
+              <Text style={{color: 'white'}}>{index}</Text>
+            </Circle>
           )
         })}
       </Container>

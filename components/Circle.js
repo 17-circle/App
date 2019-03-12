@@ -8,6 +8,10 @@ const StyledCircle = styled(Animated.View)`
   height: ${props => props.radius*2};
   background-color: ${props => props.color};
   border-radius: ${props => props.radius};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export default class Circle extends Component {
