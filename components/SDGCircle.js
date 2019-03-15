@@ -19,37 +19,35 @@ const circles = [{
   color: 'blue'
 }, {
   color: 'green'
+}, {
+  color: 'yellow'
+}, {
+  color: 'purple'
+}, {
+  color: 'black'
+}, {
+  color: 'gray'
+}, {
+  color: 'pink'
+}, {
+  color: 'lime'
+}, {
+  color: 'darkgreen'
+}, {
+  color: 'crimson'
+}, {
+  color: 'orange'
+}, {
+  color: 'cyan'
+}, {
+  color: 'navy'
+}, {
+  color: 'indigo'
+}, {
+  color: 'brown'
+}, {
+  color: 'peru'
 }
-//                  , {
-//   color: 'yellow'
-// }
-//                  , {
-//   color: 'purple'
-// }, {
-//   color: 'black'
-// }, {
-//   color: 'gray'
-// }, {
-//   color: 'pink'
-// }, {
-//   color: 'lime'
-// }, {
-//   color: 'darkgreen'
-// }, {
-//   color: 'crimson'
-// }, {
-//   color: 'orange'
-// }, {
-//   color: 'cyan'
-// }, {
-//   color: 'navy'
-// }, {
-//   color: 'indigo'
-// }, {
-//   color: 'brown'
-// }, {
-//   color: 'peru'
-// }
                 ]
 
 function withFunction(callback) {
@@ -80,7 +78,6 @@ export default class SDGCircle extends Component {
     onPanResponderGrant: () => {
       const { deltaAnim } = this.state
       deltaAnim.setOffset(deltaAnim._value)
-      // deltaAnim.setOffset(deltaAnim._offset + deltaAnim._value)
       deltaAnim.setValue(0)
     },
     onPanResponderMove: (event, gestureState) => {
@@ -90,25 +87,29 @@ export default class SDGCircle extends Component {
     onPanResponderRelease: (event, gestureState) => {
       const {dx, vx} = gestureState
       const {deltaAnim} = this.state
-      const handlerValue = Math.abs(dx) > SCREEN_WIDTH / 8 || Math.abs(vx) > 1.3 ? this.getAmountForNextSlice(dx, deltaAnim._offset) : this.snapOffset(deltaAnim._offset);
 
       deltaAnim.flattenOffset()
       Animated.spring(deltaAnim, {
-        toValue: handlerValue,
-        friction: 1000,
-        tension: 0.001,
+        toValue: this.getIthCircleValue(dx, deltaAnim),
+        friction: 5,
+        tension: 10,
       }).start(() => this.simplifyOffset(deltaAnim._value));
     }
   })
 
+  getIthCircleValue = (dx, deltaAnim) => {
+    const ithCircle = Math.round(deltaAnim._value/(600/circles.length))
+    return (ithCircle)*600/circles.length
+  }
   getAmountForNextSlice = (dx, offset) => {
     // This just rounds to the nearest 200 to snap the circle to the correct thirds
     const snappedOffset = this.snapOffset(offset);
     // Depending on the direction, we either add 200 or subtract 200 to calculate new offset position. (200 are equal to 120deg!)
-    const newOffset = dx > 0 ? snappedOffset + 200 : snappedOffset - 200;
+    // const newOffset = dx > 0 ? snappedOffset + 200 : snappedOffset - 200; // fixed for 3 circles
+    const newOffset = dx > 0 ? snappedOffset + 600/circles.length : snappedOffset - 600/circles.length;
     return newOffset;
   }
-  snapOffset = (offset) => { return Math.round(offset / 200) * 200; }
+  snapOffset = (offset) => { return Math.round(offset / (600/circles.length)) * 600/circles.length; }
   simplifyOffset = (val) => {
     const { deltaAnim } = this.state
     if(deltaAnim._offset > 600) deltaAnim.setOffset(deltaAnim._offset - 600)
