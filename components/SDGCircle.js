@@ -13,41 +13,47 @@ const Container = styled(Animated.View)`
   top: 100px;
 `
 
+const gaussFunc = (x, sigma, mu) => {
+  return 1/sigma/Math.sqrt(2.0*Math.PI)*Math.exp(-1.0/2.0*Math.pow((x-mu)/sigma,2))
+}
+const myGaussFunc = (x) => gaussFunc(x, 1/2/Math.sqrt(2*Math.PI), 0)
+
 const circles = [{
   color: 'red'
 }, {
   color: 'blue'
 }, {
   color: 'green'
-}, {
-  color: 'yellow'
-}, {
-  color: 'purple'
-}, {
-  color: 'black'
-}, {
-  color: 'gray'
-}, {
-  color: 'pink'
-}, {
-  color: 'lime'
-}, {
-  color: 'darkgreen'
-}, {
-  color: 'crimson'
-}, {
-  color: 'orange'
-}, {
-  color: 'cyan'
-}, {
-  color: 'navy'
-}, {
-  color: 'indigo'
-}, {
-  color: 'brown'
-}, {
-  color: 'peru'
 }
+//                  , {
+//   color: 'yellow'
+// }, {
+//   color: 'purple'
+// }, {
+//   color: 'black'
+// }, {
+//   color: 'gray'
+// }, {
+//   color: 'pink'
+// }, {
+//   color: 'lime'
+// }, {
+//   color: 'darkgreen'
+// }, {
+//   color: 'crimson'
+// }, {
+//   color: 'orange'
+// }, {
+//   color: 'cyan'
+// }, {
+//   color: 'navy'
+// }, {
+//   color: 'indigo'
+// }, {
+//   color: 'brown'
+// }, {
+//   color: 'peru'
+// }
                 ]
 
 function withFunction(callback) {
@@ -62,12 +68,32 @@ function withFunction(callback) {
 }
 
 export default class SDGCircle extends Component {
-  state = {
-    deltaTheta: 360/circles.length,
-    Radius: 0, // radius of center circle (contaienr)
-    radius: 25, // radius of orbiting circles
-    container: { height: 0, width: 0 },
-    deltaAnim: new Animated.Value(0),
+  constructor(props) {
+    super(props)
+
+    const deltaTheta = 360/circles.length
+    const pxPerDeg = 200/120
+
+
+    const thetas = []
+    for (const i in circles) {
+      let val = i*deltaTheta*pxPerDeg
+      if(i >= Math.round(circles.length/2))
+        val = (i-Math.round(circles.length/2)-1)*deltaTheta*pxPerDeg
+
+      thetas.push(new Animated.Value(val))
+    }
+
+    this.state = {
+      deltaTheta,
+      Radius: 0, // radius of center circle (contaienr)
+      radius: 25, // radius of orbiting circles
+      container: { height: 0, width: 0 },
+      deltaAnim: new Animated.Value(0),
+      thetas,
+    }
+
+    console.log('init', this.state.thetas[0], this.state.thetas[1], this.state.thetas[2])
   }
 
   offset = () => parseInt(this.state.container.width/2)-this.state.radius
@@ -76,44 +102,47 @@ export default class SDGCircle extends Component {
     nMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
     onMoveShouldSetPanResponder: (event, gestureState) => true,
     onPanResponderGrant: () => {
-      const { deltaAnim } = this.state
+      const { deltaAnim, thetas } = this.state
       deltaAnim.setOffset(deltaAnim._value)
       deltaAnim.setValue(0)
+
+      for( theta of thetas ) {
+        theta.setOffset(theta._value+theta._offset)
+        theta.setValue(0)
+      }
     },
     onPanResponderMove: (event, gestureState) => {
-      const { deltaAnim } = this.state
+      const { deltaAnim, scaleAnim, deltaTheta, Radius, thetas } = this.state
       deltaAnim.setValue(gestureState.dx)
+
+      for( theta of thetas ) {
+        theta.setValue(-gestureState.dx)
+      }
     },
     onPanResponderRelease: (event, gestureState) => {
       const {dx, vx} = gestureState
-      const {deltaAnim} = this.state
+      const {deltaAnim, thetas, deltaTheta} = this.state
 
+      const ithCircleValue = this.getIthCircleValue(dx, deltaAnim)
       deltaAnim.flattenOffset()
       Animated.spring(deltaAnim, {
-        toValue: this.getIthCircleValue(dx, deltaAnim),
+        toValue: ithCircleValue,
         friction: 5,
         tension: 10,
-      }).start(() => this.simplifyOffset(deltaAnim._value));
+      }).start(() => this.simplifyOffset(deltaAnim));
+
     }
   })
 
   getIthCircleValue = (dx, deltaAnim) => {
-    const ithCircle = Math.round(deltaAnim._value/(600/circles.length))
-    return (ithCircle)*600/circles.length
+    const selectedCircle = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
+    return (selectedCircle)*600/circles.length
   }
-  getAmountForNextSlice = (dx, offset) => {
-    // This just rounds to the nearest 200 to snap the circle to the correct thirds
-    const snappedOffset = this.snapOffset(offset);
-    // Depending on the direction, we either add 200 or subtract 200 to calculate new offset position. (200 are equal to 120deg!)
-    // const newOffset = dx > 0 ? snappedOffset + 200 : snappedOffset - 200; // fixed for 3 circles
-    const newOffset = dx > 0 ? snappedOffset + 600/circles.length : snappedOffset - 600/circles.length;
-    return newOffset;
-  }
+
   snapOffset = (offset) => { return Math.round(offset / (600/circles.length)) * 600/circles.length; }
-  simplifyOffset = (val) => {
-    const { deltaAnim } = this.state
-    if(deltaAnim._offset > 600) deltaAnim.setOffset(deltaAnim._offset - 600)
-    if(deltaAnim._offset < -600) deltaAnim.setOffset(deltaAnim._offset + 600)
+  simplifyOffset = (anim) => {
+    if(anim._offset > 600) anim.setOffset(anim._offset - 600)
+    if(anim._offset < -600) anim.setOffset(anim._offset + 600)
   }
 
   handleLayout = ({ nativeEvent }) => {
@@ -143,7 +172,17 @@ export default class SDGCircle extends Component {
         }}
       >
         {circles.map((circle, index) => {
-          const {deltaTheta, Radius} = this.state
+          const {deltaTheta, thetas, Radius} = this.state
+
+          /* const difInPx = index*deltaTheta*200/120 */
+          let i = index
+          /* if(index >= Math.round(circles.length/2)) */
+          /*   i = circles.length - index */
+
+          scale = thetas[i].interpolate({
+            inputRange: [-600, 0, 600],
+            outputRange: [0.2, 2, 0.2],
+          })
 
           return (
             <Circle
@@ -153,7 +192,7 @@ export default class SDGCircle extends Component {
               style={{
                 left: Math.sin(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
                 top: Math.cos(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
-
+                /* transform: [{ scale }], */
               }}
             >
               <Text style={{color: 'white'}}>{index}</Text>
