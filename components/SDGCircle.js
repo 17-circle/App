@@ -24,37 +24,35 @@ const circles = [{
   color: 'blue'
 }, {
   color: 'green'
-}
-//                  , {
-//   color: 'yellow'
-// }, {
-//   color: 'purple'
-// }, {
-//   color: 'black'
-// }, {
-//   color: 'gray'
-// }, {
-//   color: 'pink'
-// }, {
-//   color: 'lime'
-// }, {
-//   color: 'darkgreen'
-// }, {
-//   color: 'crimson'
-// }, {
-//   color: 'orange'
-// }, {
-//   color: 'cyan'
-// }, {
-//   color: 'navy'
-// }, {
-//   color: 'indigo'
-// }, {
-//   color: 'brown'
-// }, {
-//   color: 'peru'
-// }
-                ]
+}, {
+  color: 'yellow'
+}, {
+  color: 'purple'
+}, {
+  color: 'black'
+}, {
+  color: 'gray'
+}, {
+  color: 'pink'
+}, {
+  color: 'lime'
+}, {
+  color: 'darkgreen'
+}, {
+  color: 'crimson'
+}, {
+  color: 'orange'
+}, {
+  color: 'cyan'
+}, {
+  color: 'navy'
+}, {
+  color: 'indigo'
+}, {
+  color: 'brown'
+}, {
+  color: 'peru'
+}]
 
 function withFunction(callback) {
   let inputRange = [], outputRange = [], steps = 50;
@@ -78,8 +76,8 @@ export default class SDGCircle extends Component {
     const thetas = []
     for (const i in circles) {
       let val = i*deltaTheta*pxPerDeg
-      if(i >= Math.round(circles.length/2))
-        val = (i-Math.round(circles.length/2)-1)*deltaTheta*pxPerDeg
+      if(i >= 9)
+        val = -(circles.length-i)*deltaTheta*pxPerDeg
 
       thetas.push(new Animated.Value(val))
     }
@@ -93,7 +91,7 @@ export default class SDGCircle extends Component {
       thetas,
     }
 
-    console.log('init', this.state.thetas[0], this.state.thetas[1], this.state.thetas[2])
+    console.log('init', this.state.thetas[0], this.state.thetas[1], this.state.thetas[16])
   }
 
   offset = () => parseInt(this.state.container.width/2)-this.state.radius
@@ -107,7 +105,7 @@ export default class SDGCircle extends Component {
       deltaAnim.setValue(0)
 
       for( theta of thetas ) {
-        theta.setOffset(theta._value+theta._offset)
+        theta.setOffset(theta._value)
         theta.setValue(0)
       }
     },
@@ -115,7 +113,7 @@ export default class SDGCircle extends Component {
       const { deltaAnim, scaleAnim, deltaTheta, Radius, thetas } = this.state
       deltaAnim.setValue(gestureState.dx)
 
-      for( theta of thetas ) {
+      for (theta of thetas) {
         theta.setValue(-gestureState.dx)
       }
     },
@@ -123,13 +121,29 @@ export default class SDGCircle extends Component {
       const {dx, vx} = gestureState
       const {deltaAnim, thetas, deltaTheta} = this.state
 
-      const ithCircleValue = this.getIthCircleValue(dx, deltaAnim)
       deltaAnim.flattenOffset()
+      const ithCircleValue = this.getIthCircleValue(dx, deltaAnim)
       Animated.spring(deltaAnim, {
         toValue: ithCircleValue,
         friction: 5,
         tension: 10,
       }).start(() => this.simplifyOffset(deltaAnim));
+
+    //   const pxPerDeg = 200/120
+    //   for(const i in thetas) {
+    //     thetas[i].flattenOffset()
+
+    //     const selectedCircle = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
+    //     let val = i*deltaTheta*pxPerDeg+selectedCircle*600/circles.length
+    //     if(i >= Math.round(circles.length/2))
+    //       val = (i-Math.round(circles.length/2)-1)*deltaTheta*pxPerDeg-selectedCircle*600/circles.length
+
+    //     Animated.spring(thetas[i], {
+    //       toValue: val,
+    //       friction: 5,
+    //       tension: 10,
+    //     }).start();
+      // }
 
     }
   })
@@ -180,8 +194,8 @@ export default class SDGCircle extends Component {
           /*   i = circles.length - index */
 
           scale = thetas[i].interpolate({
-            inputRange: [-600, 0, 600],
-            outputRange: [0.2, 2, 0.2],
+            inputRange: [-300, 0, 300],
+            outputRange: [0, 2, 0],
           })
 
           return (
@@ -192,7 +206,7 @@ export default class SDGCircle extends Component {
               style={{
                 left: Math.sin(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
                 top: Math.cos(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
-                /* transform: [{ scale }], */
+                transform: [{ scale }],
               }}
             >
               <Text style={{color: 'white'}}>{index}</Text>
