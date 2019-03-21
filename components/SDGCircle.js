@@ -79,7 +79,7 @@ export default class SDGCircle extends Component {
       if(i >= 9)
         val = -(circles.length-i)*deltaTheta*pxPerDeg
 
-      thetas.push(new Animated.Value(val))
+      thetas.push(val)
     }
 
     this.state = {
@@ -89,9 +89,8 @@ export default class SDGCircle extends Component {
       container: { height: 0, width: 0 },
       deltaAnim: new Animated.Value(0),
       thetas,
+      thetasAnim: thetas.map(theta => new Animated.Value(theta)),
     }
-
-    console.log('init', this.state.thetas[0], this.state.thetas[1], this.state.thetas[16])
   }
 
   offset = () => parseInt(this.state.container.width/2)-this.state.radius
@@ -100,26 +99,33 @@ export default class SDGCircle extends Component {
     nMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
     onMoveShouldSetPanResponder: (event, gestureState) => true,
     onPanResponderGrant: () => {
-      const { deltaAnim, thetas } = this.state
+      const { deltaAnim, thetasAnim, thetas } = this.state
       deltaAnim.setOffset(deltaAnim._value)
       deltaAnim.setValue(0)
 
-      for( theta of thetas ) {
-        theta.setOffset(theta._value)
-        theta.setValue(0)
+      const iSel = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
+      for(let i=0; i<circles.length; i++) {
+        let xi = i+iSel
+        if(xi > 16)
+          xi -= circles.length
+        if(xi < 0)
+          xi += circles.length
+        try {
+          thetasAnim[xi].setOffset(thetas[i])
+        } catch(err) {console.log(xi)}
       }
     },
     onPanResponderMove: (event, gestureState) => {
-      const { deltaAnim, scaleAnim, deltaTheta, Radius, thetas } = this.state
+      const { deltaAnim, scaleAnim, deltaTheta, Radius, thetasAnim } = this.state
       deltaAnim.setValue(gestureState.dx)
 
-      for (theta of thetas) {
+      for (theta of thetasAnim) {
         theta.setValue(-gestureState.dx)
       }
     },
     onPanResponderRelease: (event, gestureState) => {
       const {dx, vx} = gestureState
-      const {deltaAnim, thetas, deltaTheta} = this.state
+      const {deltaAnim, thetasAnim, deltaTheta, thetas} = this.state
 
       deltaAnim.flattenOffset()
       const ithCircleValue = this.getIthCircleValue(dx, deltaAnim)
@@ -127,23 +133,9 @@ export default class SDGCircle extends Component {
         toValue: ithCircleValue,
         friction: 5,
         tension: 10,
-      }).start(() => this.simplifyOffset(deltaAnim));
-
-    //   const pxPerDeg = 200/120
-    //   for(const i in thetas) {
-    //     thetas[i].flattenOffset()
-
-    //     const selectedCircle = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
-    //     let val = i*deltaTheta*pxPerDeg+selectedCircle*600/circles.length
-    //     if(i >= Math.round(circles.length/2))
-    //       val = (i-Math.round(circles.length/2)-1)*deltaTheta*pxPerDeg-selectedCircle*600/circles.length
-
-    //     Animated.spring(thetas[i], {
-    //       toValue: val,
-    //       friction: 5,
-    //       tension: 10,
-    //     }).start();
-      // }
+      }).start(() => {
+        this.simplifyOffset(deltaAnim)
+      });
 
     }
   })
@@ -155,8 +147,8 @@ export default class SDGCircle extends Component {
 
   snapOffset = (offset) => { return Math.round(offset / (600/circles.length)) * 600/circles.length; }
   simplifyOffset = (anim) => {
-    if(anim._offset > 600) anim.setOffset(anim._offset - 600)
-    if(anim._offset < -600) anim.setOffset(anim._offset + 600)
+    if(anim._value + anim._offset >= 600) anim.setOffset(anim._offset - 600)
+    if(anim._value + anim._offset <= -600) anim.setOffset(anim._offset + 600)
   }
 
   handleLayout = ({ nativeEvent }) => {
@@ -186,14 +178,14 @@ export default class SDGCircle extends Component {
         }}
       >
         {circles.map((circle, index) => {
-          const {deltaTheta, thetas, Radius} = this.state
+          const {deltaTheta, thetasAnim, Radius} = this.state
 
           /* const difInPx = index*deltaTheta*200/120 */
           let i = index
           /* if(index >= Math.round(circles.length/2)) */
           /*   i = circles.length - index */
 
-          scale = thetas[i].interpolate({
+          scale = thetasAnim[i].interpolate({
             inputRange: [-300, 0, 300],
             outputRange: [0, 2, 0],
           })
