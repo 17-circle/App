@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Vibration } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo'
+import QRCode from 'react-native-qrcode'
 
 
 export default class LinksScreen extends React.Component {
@@ -36,6 +37,12 @@ export default class LinksScreen extends React.Component {
         <BarCodeScanner
           onBarCodeRead={this._handleBarCodeRead}
           style={{ height: 250, width: 350}}
+        />
+        <QRCode
+          value={'123'}
+          size={200}
+          bgColor='purple'
+          fgColor='white'
         />
       </View>
     );
