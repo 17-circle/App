@@ -1,5 +1,5 @@
 import React from 'react';
-import Amplify from 'aws-amplify'
+import Amplify, { Auth } from 'aws-amplify'
 import awsmobile from './aws-exports'
 import { withAuthenticator } from 'aws-amplify-react-native'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
@@ -10,7 +10,23 @@ Amplify.configure(awsmobile)
 class App extends React.Component {
   state = {
     isLoadingComplete: false,
+    isAdmin: false
   };
+
+  getUserGroups = async () => {
+    const user = await Auth.currentAuthenticatedUser()
+    return user.signInUserSession.accessToken.payload['cognito:groups']
+  }
+  isAdmin = async () => {
+    const userGroups = await this.getUserGroups()
+    return userGroups.includes('admin')
+  }
+
+  componentDidMount = async (props) => {
+    const isAdmin = await this.isAdmin()
+
+    this.setState({isAdmin})
+  }
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -25,7 +41,7 @@ class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
+          <AppNavigator screenProps={{isAdmin: this.state.isAdmin}}/>
         </View>
       );
     }

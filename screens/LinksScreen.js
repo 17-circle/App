@@ -24,7 +24,12 @@ export default class LinksScreen extends React.Component {
   }
 
   render() {
+    const { screenProps: { isAdmin }} = this.props
     const { hasCameraPermission } = this.state
+
+    if(!isAdmin)
+      return <Text>You have to be an organizer to certify SDGs!</Text>
+
     if(hasCameraPermission === null) {
       return <Text>Requesting for camera permissions</Text>
     }
