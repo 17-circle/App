@@ -1,0 +1,8 @@
+{
+	"auth": {
+		"seventeenAuth": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

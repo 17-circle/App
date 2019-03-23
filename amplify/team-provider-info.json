@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "seventeen-20190323163329-authRole",
+            "UnauthRoleArn": "arn:aws:iam::037641059503:role/seventeen-20190323163329-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::037641059503:role/seventeen-20190323163329-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "seventeen-20190323163329-deployment",
+            "UnauthRoleName": "seventeen-20190323163329-unauthRole",
+            "StackName": "seventeen-20190323163329",
+            "StackId": "arn:aws:cloudformation:eu-west-1:037641059503:stack/seventeen-20190323163329/02c11900-4d81-11e9-9a34-0a611b368f3e"
+        },
+        "categories": {
+            "auth": {
+                "seventeenAuth": {}
+            }
+        }
+    }
+}

@@ -1,9 +1,13 @@
 import React from 'react';
+import Amplify from 'aws-amplify'
+import awsmobile from './aws-exports'
+import { withAuthenticator } from 'aws-amplify-react-native'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+Amplify.configure(awsmobile)
 
-export default class App extends React.Component {
+class App extends React.Component {
   state = {
     isLoadingComplete: false,
   };
@@ -53,6 +57,8 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
 }
+
+export default withAuthenticator(App, true)
 
 const styles = StyleSheet.create({
   container: {
