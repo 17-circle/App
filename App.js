@@ -1,5 +1,5 @@
 import React from 'react';
-import Amplify, { Auth } from 'aws-amplify'
+import Amplify, { Auth, API, GraphqlOperations } from 'aws-amplify'
 import awsmobile from './aws-exports'
 import { withAuthenticator } from 'aws-amplify-react-native'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';

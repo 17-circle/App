@@ -1,13 +1,13 @@
 {
-    "identityPoolName": "seventeenAuth",
+    "identityPoolName": "seventeen",
     "allowUnauthenticatedIdentities": false,
     "thirdPartyAuth": false,
-    "lambdaLogPolicy": "seventeenAuth_lambda_log_policy",
-    "openIdLambdaRoleName": "seventeenAuth_openid_lambda_role",
-    "openIdRolePolicy": "seventeenAuth_openid_pass_role_policy",
-    "openIdLambdaIAMPolicy": "seventeenAuth_openid_lambda_iam_policy",
-    "openIdLogPolicy": "seventeenAuth_openid_lambda_log_policy",
-    "userPoolName": "seventeenAuth",
+    "lambdaLogPolicy": "seventeen_lambda_log_policy",
+    "openIdLambdaRoleName": "seventeen_openid_lambda_role",
+    "openIdRolePolicy": "seventeen_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "seventeen_openid_lambda_iam_policy",
+    "openIdLogPolicy": "seventeen_openid_lambda_log_policy",
+    "userPoolName": "seventeen",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -15,9 +15,9 @@
     "mfaTypes": [
         "SMS Text Message"
     ],
-    "roleName": "seventeenAuth_sns-role",
-    "roleExternalId": "seventeenAuth_role_external_id",
-    "policyName": "seventeenAuth-sns-policy",
+    "roleName": "seventeen_sns-role",
+    "roleExternalId": "seventeen_role_external_id",
+    "policyName": "seventeen-sns-policy",
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your verification code",
@@ -28,23 +28,23 @@
     "requiredAttributes": [
         "email"
     ],
-    "userpoolClientName": "seventeenAuth_app_client",
+    "userpoolClientName": "seventeen_app_client",
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "mfaLambdaRole": "seventeenAuth_totp_lambda_role",
-    "mfaLambdaLogPolicy": "seventeenAuth_totp_lambda_log_policy",
-    "mfaPassRolePolicy": "seventeenAuth_totp_pass_role_policy",
-    "mfaLambdaIAMPolicy": "seventeenAuth_totp_lambda_iam_policy",
-    "userpoolClientLambdaRole": "seventeenAuth_userpoolclient_lambda_role",
-    "userpoolClientLogPolicy": "seventeenAuth_userpoolclient_lambda_log_policy",
-    "userpoolClientLambdaPolicy": "seventeenAuth_userpoolclient_lambda_iam_policy",
+    "mfaLambdaRole": "seventeen_totp_lambda_role",
+    "mfaLambdaLogPolicy": "seventeen_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "seventeen_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "seventeen_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "seventeen_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "seventeen_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "seventeen_userpoolclient_lambda_iam_policy",
     "userpoolClientSetAttributes": false,
     "useDefault": "manual",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "seventeenAuth",
+    "resourceName": "seventeen",
     "authRoleName": {
         "Ref": "AuthRoleName"
     },

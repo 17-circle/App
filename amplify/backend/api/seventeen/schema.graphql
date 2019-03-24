@@ -1,0 +1,8 @@
+type SDG @model @auth(rules: [
+    { allow: owner, ownerField: "owner", mutations: [], queries: [get, list] },
+    { allow: groups, groups: ["admin"], mutations: [create, update], queries: [] }
+  ]) {
+  id: ID!
+  goal: Int!
+  owner: String!
+}

@@ -1,0 +1,16 @@
+projects:
+  seventeen:
+    schemaPath: amplify/backend/api/seventeen/src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        graphQLApiId: vnu573xhlbcyrdz63f5xckb4tq
+      endpoints:
+        prod: >-
+          https://ol7fgdqysnhpjo5eamf2s2kxku.appsync-api.eu-west-1.amazonaws.com/graphql

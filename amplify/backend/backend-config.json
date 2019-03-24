@@ -1,8 +1,17 @@
 {
 	"auth": {
-		"seventeenAuth": {
+		"seventeen": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation"
+		}
+	},
+	"api": {
+		"seventeen": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS"
+			}
 		}
 	}
 }
