@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Vibration, Alert } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo'
 import QRCode from 'react-native-qrcode'
 
+import { API, graphqlOperation } from 'aws-amplify'
+import * as mutations from '../graphql/mutations'
 
 export default class LinksScreen extends React.Component {
   state = {
@@ -24,11 +26,23 @@ export default class LinksScreen extends React.Component {
       `Do you want to unlock goal 1 for ${data}?`,
       [{
         text: 'Cancel',
-        onPress: () => console.log('cancel'),
         style: 'cancel',
       }, {
         text: 'Unlock',
-        onPress: () => console.log('ok'),
+        onPress: async () => {
+          const sdg = {
+            goal: 1,
+            owner: data
+          }
+
+          await API.graphql(
+            graphqlOperation(
+              mutations.createSdg, {input: sdg}
+            )
+          )
+
+          alert(`Unlocked SDG 1 for ${data}`)
+        },
       }]
     )
     // alert(`Type: ${type} and data: ${data}`)

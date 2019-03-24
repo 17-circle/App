@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
@@ -24,30 +25,43 @@ export default class HomeScreen extends React.Component {
 
   state = {
     sdgs: [],
+    refreshing: true,
   }
 
-  componentDidMount = async (props) => {
-    const sdgs = (await API.graphql(graphqlOperation(queries.listSdGs))).data.listSDGs.items
-    this.setState({sdgs})
+  componentDidMount = () => {
+    this._getSDGs().then(sdgs => {
+      this.setState({sdgs, refreshing: false})
+    })
+  }
+
+  _getSDGs = async () => {
+    return (await API.graphql(graphqlOperation(queries.listSdGs))).data.listSDGs.items
+  }
+
+  _onRefresh = () => {
+    this.setState({ refreshing: true })
+    this._getSDGs().then(sdgs => {
+      this.setState({sdgs, refreshing: false})
+    })
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>SDG count: {this.state.sdgs.length}</Text>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
-        </ScrollView>
-
+        <View style={{flex: 1, height: '80%', justifyContent: 'center'}}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
+          >
+            <Text style={{textAlign: 'center', fontSize: 40}}>
+              SDG count: {this.state.sdgs.length}
+            </Text>
+          </ScrollView>
+        </View>
         <SDGCircle />
       </View>
     );
