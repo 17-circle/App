@@ -11,9 +11,13 @@ Amplify.configure(awsmobile)
 class App extends React.Component {
   state = {
     isLoadingComplete: false,
-    isAdmin: false
+    isAdmin: false,
+    username: null
   };
 
+  getUsername = async () => {
+    return (await Auth.currentAuthenticatedUser()).username
+  }
   getUserGroups = async () => {
     const user = await Auth.currentAuthenticatedUser()
     const groups = user.signInUserSession.accessToken.payload['cognito:groups']
@@ -25,9 +29,10 @@ class App extends React.Component {
   }
 
   componentDidMount = async (props) => {
+    const username = await this.getUsername()
     const isAdmin = await this.isAdmin()
 
-    this.setState({isAdmin})
+    this.setState({isAdmin, username})
   }
 
   render() {
@@ -43,7 +48,11 @@ class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator screenProps={{isAdmin: this.state.isAdmin}}/>
+          <AppNavigator
+            screenProps={{
+              isAdmin: this.state.isAdmin,
+              username: this.state.username
+            }}/>
         </View>
       );
     }

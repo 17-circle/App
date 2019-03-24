@@ -24,11 +24,20 @@ export default class LinksScreen extends React.Component {
   }
 
   render() {
-    const { screenProps: { isAdmin }} = this.props
+    const { screenProps: { isAdmin, username }} = this.props
     const { hasCameraPermission } = this.state
 
     if(!isAdmin)
-      return <Text>You have to be an organizer to certify SDGs!</Text>
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <QRCode
+            value={username}
+            size={200}
+            bgColor='purple'
+            fgColor='white'
+          />
+        </View>
+      )
 
     if(hasCameraPermission === null) {
       return <Text>Requesting for camera permissions</Text>
