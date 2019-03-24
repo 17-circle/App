@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Vibration } from 'react-native';
+import { View, Text, StyleSheet, Vibration, Alert } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo'
 import QRCode from 'react-native-qrcode'
 
@@ -19,7 +19,19 @@ export default class LinksScreen extends React.Component {
   };
 
   _handleBarCodeRead = ({type, data}) => {
-    alert(`Type: ${type} and data: ${data}`)
+    Alert.alert(
+      `Unlock SDG`,
+      `Do you want to unlock goal 1 for ${data}?`,
+      [{
+        text: 'Cancel',
+        onPress: () => console.log('cancel'),
+        style: 'cancel',
+      }, {
+        text: 'Unlock',
+        onPress: () => console.log('ok'),
+      }]
+    )
+    // alert(`Type: ${type} and data: ${data}`)
     Vibration.vibrate(100)
   }
 
