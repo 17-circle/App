@@ -14,7 +14,7 @@ const HomeStack = createStackNavigator({
 
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: 'SDGs',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -36,7 +36,7 @@ LinksStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-barcode' : 'md-barcode'}
     />
   ),
 };
@@ -58,5 +58,5 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator({
   HomeStack,
   LinksStack,
-  SettingsStack,
+  // SettingsStack,
 });
