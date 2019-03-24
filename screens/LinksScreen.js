@@ -8,7 +8,9 @@ import * as mutations from '../graphql/mutations'
 
 export default class LinksScreen extends React.Component {
   state = {
-    hasCameraPermissions: null
+    hasCameraPermissions: null,
+    isBusy: false,
+    users: [],
   }
 
   async componentWillMound() {
@@ -21,37 +23,42 @@ export default class LinksScreen extends React.Component {
   };
 
   _handleBarCodeRead = ({type, data}) => {
-    Alert.alert(
-      `Unlock SDG`,
-      `Do you want to unlock goal 1 for ${data}?`,
-      [{
-        text: 'Cancel',
-        style: 'cancel',
-      }, {
-        text: 'Unlock',
-        onPress: async () => {
-          const sdg = {
-            goal: 1,
-            owner: data
-          }
+    if(!this.state.busy) {
+      this.setState({busy: true})
+      Vibration.vibrate(100)
+      Alert.alert(
+        `Unlock SDG`,
+        `Do you want to unlock goal 1 for ${data}?`,
+        [{
+          text: 'Cancel',
+          onPress: () => this.setState({ busy: false }),
+          style: 'cancel',
+        }, {
+          text: 'Unlock',
+          onPress: async () => {
+            const sdg = {
+              goal: 1,
+              owner: data
+            }
 
-          await API.graphql(
-            graphqlOperation(
-              mutations.createSdg, {input: sdg}
+            await API.graphql(
+              graphqlOperation(
+                mutations.createSdg, {input: sdg}
+              )
             )
-          )
 
-          alert(`Unlocked SDG 1 for ${data}`)
-        },
-      }]
-    )
+            alert(`Unlocked SDG 1 for ${data}`)
+            this.setState({busy: false})
+          },
+        }]
+      )
+    }
     // alert(`Type: ${type} and data: ${data}`)
-    Vibration.vibrate(100)
   }
 
   render() {
     const { screenProps: { isAdmin, username }} = this.props
-    const { hasCameraPermission } = this.state
+    const { hasCameraPermission, users } = this.state
 
     if(!isAdmin)
       return (
@@ -59,7 +66,7 @@ export default class LinksScreen extends React.Component {
           <QRCode
             value={username}
             size={200}
-            bgColor='purple'
+            bgColor='black'
             fgColor='white'
           />
         </View>
@@ -81,7 +88,7 @@ export default class LinksScreen extends React.Component {
         <QRCode
           value={'123'}
           size={200}
-          bgColor='purple'
+          bgColor='black'
           fgColor='white'
         />
       </View>
