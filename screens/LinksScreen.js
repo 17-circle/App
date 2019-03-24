@@ -83,7 +83,7 @@ export default class LinksScreen extends React.Component {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <QRCode
-          value={'123'}
+          value={username}
           size={250}
           bgColor='black'
           fgColor='white'
