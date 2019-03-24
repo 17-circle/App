@@ -19,7 +19,8 @@ export default class LinksScreen extends React.Component {
   }
 
   static navigationOptions = {
-    title: 'Links',
+    header: null,
+    // title: 'Links',
   };
 
   _handleBarCodeRead = ({type, data}) => {
@@ -80,16 +81,16 @@ export default class LinksScreen extends React.Component {
     }
 
     return (
-      <View>
-        <BarCodeScanner
-          onBarCodeRead={this._handleBarCodeRead}
-          style={{ height: 250, width: 350}}
-        />
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <QRCode
           value={'123'}
-          size={200}
+          size={250}
           bgColor='black'
           fgColor='white'
+        />
+        <BarCodeScanner
+          onBarCodeRead={this._handleBarCodeRead}
+          style={{ height: 250, width: 250}}
         />
       </View>
     );

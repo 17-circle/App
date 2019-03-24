@@ -32,7 +32,7 @@ const LinksStack = createStackNavigator({
 });
 
 LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+  tabBarLabel: 'QR-Code',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
