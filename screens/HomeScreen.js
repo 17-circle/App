@@ -13,15 +13,28 @@ import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import SDGCircle from '../components/SDGCircle'
 
+import { API, graphqlOperation } from 'aws-amplify'
+import * as queries from '../graphql/queries'
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
+  state = {
+    sdgs: [],
+  }
+
+  componentDidMount = async (props) => {
+    const sdgs = (await API.graphql(graphqlOperation(queries.listSdGs))).data.listSDGs.items
+    this.setState({sdgs})
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        <Text>SDG count: {this.state.sdgs.length}</Text>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <Image

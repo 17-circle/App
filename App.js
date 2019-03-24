@@ -1,11 +1,12 @@
 import React from 'react';
-import Amplify, { Auth, API, GraphqlOperations } from 'aws-amplify'
+import Amplify, { Auth } from 'aws-amplify'
 import awsmobile from './aws-exports'
 import { withAuthenticator } from 'aws-amplify-react-native'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 Amplify.configure(awsmobile)
+
 
 class App extends React.Component {
   state = {
@@ -15,7 +16,8 @@ class App extends React.Component {
 
   getUserGroups = async () => {
     const user = await Auth.currentAuthenticatedUser()
-    return user.signInUserSession.accessToken.payload['cognito:groups']
+    const groups = user.signInUserSession.accessToken.payload['cognito:groups']
+    return groups ? groups : []
   }
   isAdmin = async () => {
     const userGroups = await this.getUserGroups()
