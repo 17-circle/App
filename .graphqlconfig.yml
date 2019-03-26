@@ -1,6 +1,6 @@
 projects:
   seventeen:
-    schemaPath: amplify/backend/api/seventeen/src/graphql/schema.json
+    schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js
     excludes:

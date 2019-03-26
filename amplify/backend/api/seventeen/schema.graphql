@@ -5,4 +5,5 @@ type SDG @model @auth(rules: [
   id: ID!
   goal: Int!
   owner: String!
+  certifies: [Int]
 }

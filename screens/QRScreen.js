@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Vibration, Alert } from 'react-native';
+import { View, Text, StyleSheet, Vibration, Alert, Picker } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo'
 import QRCode from 'react-native-qrcode'
 
@@ -66,7 +66,7 @@ export default class LinksScreen extends React.Component {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <QRCode
             value={username}
-            size={200}
+            size={250}
             bgColor='black'
             fgColor='white'
           />
@@ -81,17 +81,28 @@ export default class LinksScreen extends React.Component {
     }
 
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <QRCode
-          value={username}
-          size={250}
-          bgColor='black'
-          fgColor='white'
-        />
-        <BarCodeScanner
-          onBarCodeRead={this._handleBarCodeRead}
-          style={{ height: 250, width: 250}}
-        />
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'pink'}}>
+        <View>
+          <QRCode
+            value={username}
+            size={200}
+            bgColor='black'
+            fgColor='white'
+          />
+        </View>
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <Picker
+            selectedValue={1}
+            style={{height: 50, width: 100}}
+          >
+            <Picker.Item label="1" value={1} />
+            <Picker.Item label="2" value={2} />
+          </Picker>
+          <BarCodeScanner
+            onBarCodeRead={this._handleBarCodeRead}
+            style={{ height: 200, width: 200}}
+          />
+        </View>
       </View>
     );
   }
