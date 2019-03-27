@@ -5,17 +5,26 @@ import QRCode from 'react-native-qrcode'
 
 import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../graphql/mutations'
+import * as queries from '../graphql/queries'
 
 export default class LinksScreen extends React.Component {
   state = {
     hasCameraPermissions: null,
     isBusy: false,
     users: [],
+    certificates: [],
+    selectedGoal: 1,
   }
 
-  async componentWillMound() {
+  async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
-    this.setState({ hasCameraPermission:status === 'granted' })
+    const certifys = await this._getCertificates()
+
+    this.setState({ hasCameraPermission:status === 'granted', certificates: certifys })
+  }
+
+  _getCertificates = async () => {
+    return (await API.graphql(graphqlOperation(queries.listCertifys))).data.listCertifys.items
   }
 
   static navigationOptions = {
@@ -59,7 +68,7 @@ export default class LinksScreen extends React.Component {
 
   render() {
     const { screenProps: { isAdmin, username }} = this.props
-    const { hasCameraPermission, users } = this.state
+    const { hasCameraPermission, users, certificates } = this.state
 
     if(!isAdmin)
       return (
@@ -80,6 +89,9 @@ export default class LinksScreen extends React.Component {
       return <Text>No access to camera </Text>
     }
 
+
+    const pickerItems = certificates.map(({goal}) => <Picker.Item key={goal} label={`${goal}`} value={goal}/>)
+
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'pink'}}>
         <View>
@@ -92,11 +104,11 @@ export default class LinksScreen extends React.Component {
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <Picker
-            selectedValue={1}
+            selectedValue={this.state.selectedGoal}
+            onValueChange={(value, index) => this.setState({selectedGoal: value})}
             style={{height: 50, width: 100}}
           >
-            <Picker.Item label="1" value={1} />
-            <Picker.Item label="2" value={2} />
+            {pickerItems}
           </Picker>
           <BarCodeScanner
             onBarCodeRead={this._handleBarCodeRead}

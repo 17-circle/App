@@ -25,3 +25,27 @@ export const onDeleteSdg = `subscription OnDeleteSdg {
   }
 }
 `;
+export const onCreateCertify = `subscription OnCreateCertify {
+  onCreateCertify {
+    id
+    goal
+    owner
+  }
+}
+`;
+export const onUpdateCertify = `subscription OnUpdateCertify {
+  onUpdateCertify {
+    id
+    goal
+    owner
+  }
+}
+`;
+export const onDeleteCertify = `subscription OnDeleteCertify {
+  onDeleteCertify {
+    id
+    goal
+    owner
+  }
+}
+`;

@@ -25,3 +25,27 @@ export const deleteSdg = `mutation DeleteSdg($input: DeleteSDGInput!) {
   }
 }
 `;
+export const createCertify = `mutation CreateCertify($input: CreateCertifyInput!) {
+  createCertify(input: $input) {
+    id
+    goal
+    owner
+  }
+}
+`;
+export const updateCertify = `mutation UpdateCertify($input: UpdateCertifyInput!) {
+  updateCertify(input: $input) {
+    id
+    goal
+    owner
+  }
+}
+`;
+export const deleteCertify = `mutation DeleteCertify($input: DeleteCertifyInput!) {
+  deleteCertify(input: $input) {
+    id
+    goal
+    owner
+  }
+}
+`;

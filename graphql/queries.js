@@ -20,3 +20,26 @@ export const listSdGs = `query ListSdGs($filter: ModelSDGFilterInput, $limit: In
   }
 }
 `;
+export const getCertify = `query GetCertify($id: ID!) {
+  getCertify(id: $id) {
+    id
+    goal
+    owner
+  }
+}
+`;
+export const listCertifys = `query ListCertifys(
+  $filter: ModelCertifyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCertifys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      goal
+      owner
+    }
+    nextToken
+  }
+}
+`;

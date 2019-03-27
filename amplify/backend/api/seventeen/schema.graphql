@@ -4,6 +4,11 @@ type SDG @model @auth(rules: [
   ]) {
   id: ID!
   goal: Int!
-  owner: String!
-  certifies: [Int]
+  owner: String
+}
+
+type Certify @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  goal: Int!
+  owner: String
 }
