@@ -38,7 +38,7 @@ export default class LinksScreen extends React.Component {
       Vibration.vibrate(100)
       Alert.alert(
         `Unlock SDG`,
-        `Do you want to unlock goal 1 for ${data}?`,
+        `Do you want to unlock goal ${this.state.selectedGoal} for ${data}?`,
         [{
           text: 'Cancel',
           onPress: () => this.setState({ busy: false }),
@@ -47,7 +47,7 @@ export default class LinksScreen extends React.Component {
           text: 'Unlock',
           onPress: async () => {
             const sdg = {
-              goal: 1,
+              goal: this.state.selectedGoal,
               owner: data
             }
 
@@ -57,7 +57,7 @@ export default class LinksScreen extends React.Component {
               )
             )
 
-            alert(`Unlocked SDG 1 for ${data}`)
+            alert(`Unlocked SDG ${this.state.selectedGoal} for ${data}`)
             this.setState({busy: false})
           },
         }]
