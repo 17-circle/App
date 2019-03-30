@@ -58,5 +58,5 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator({
   HomeStack,
   QRStack,
-  // SettingsStack,
+  SettingsStack,
 });
