@@ -62,7 +62,7 @@ export default class HomeScreen extends React.Component {
             </Text>
           </ScrollView>
         </View>
-        <SDGCircle />
+        <SDGCircle onSelect={(selected => console.log(selected))}/>
       </View>
     );
   }

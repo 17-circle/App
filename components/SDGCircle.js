@@ -128,7 +128,9 @@ export default class SDGCircle extends Component {
       const {deltaAnim, thetasAnim, deltaTheta, thetas} = this.state
 
       deltaAnim.flattenOffset()
+
       const ithCircleValue = this.getIthCircleValue(dx, deltaAnim)
+
       Animated.spring(deltaAnim, {
         toValue: ithCircleValue,
         friction: 5,
@@ -137,6 +139,16 @@ export default class SDGCircle extends Component {
         this.simplifyOffset(deltaAnim)
       });
 
+      // onSelect property
+      if(this.props.onSelect) {
+        const iSel = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
+        let xi = iSel
+        if(xi > 16)
+          xi -= circles.length
+        if(xi < 0)
+          xi += circles.length
+        this.props.onSelect(xi)
+      }
     }
   })
 
