@@ -213,7 +213,7 @@ export default class SDGCircle extends Component {
                 transform: [{ scale }],
               }}
             >
-              <Text style={{color: 'white'}}>{index}</Text>
+              <Text style={{color: 'white'}}>{index+1}</Text>
             </Circle>
           )
         })}

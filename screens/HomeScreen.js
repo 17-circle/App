@@ -17,6 +17,42 @@ import SDGCircle from '../components/SDGCircle'
 import { API, graphqlOperation } from 'aws-amplify'
 import * as queries from '../graphql/queries'
 
+const sdgs = [{
+  name: 1
+}, {
+  name: 2
+}, {
+  name: 3
+}, {
+  name: 4
+}, {
+  name: 5
+}, {
+  name: 6
+}, {
+  name: 7
+}, {
+  name: 8
+}, {
+  name: 9
+}, {
+  name: 10
+}, {
+  name: 11
+}, {
+  name: 12
+}, {
+  name: 13
+}, {
+  name: 14
+}, {
+  name: 15
+}, {
+  name: 16
+}, {
+  name: 17
+}]
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -26,6 +62,7 @@ export default class HomeScreen extends React.Component {
   state = {
     sdgs: [],
     refreshing: true,
+    selectedSDG: 0,
   }
 
   componentDidMount = () => {
@@ -45,6 +82,10 @@ export default class HomeScreen extends React.Component {
     })
   }
 
+  onSelectSDG = (selectedSDG) => {
+    this.setState({selectedSDG})
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -58,11 +99,16 @@ export default class HomeScreen extends React.Component {
             }
           >
             <Text style={{textAlign: 'center', fontSize: 40}}>
-              SDG count: {this.state.sdgs.length}
+              SDG count: {this.state.sdgs.length}, {this.state.selectedSDG}
+            </Text>
+            <Text>
+              Selected SDG: {sdgs[this.state.selectedSDG].name}
+              {'\n'}
+              Text text text
             </Text>
           </ScrollView>
         </View>
-        <SDGCircle onSelect={(selected => console.log(selected))}/>
+        <SDGCircle onSelect={this.onSelectSDG}/>
       </View>
     );
   }

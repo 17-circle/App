@@ -93,7 +93,6 @@ export default class SettingsScreen extends React.Component {
           onBarCodeRead={this._handleBarCodeRead}
           style={{ height: 250, width: 250}}
         />
-        <Text>Pick SDG to unlock:</Text>
         <Picker
           selectedValue={this.state.selectedGoal}
           onValueChange={(value, index) => this.setState({selectedGoal: value})}
