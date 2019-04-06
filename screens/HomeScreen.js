@@ -13,9 +13,11 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import SDGCircle from '../components/SDGCircle'
+import SDGs from '../constants/SDGs'
 
 import { API, graphqlOperation } from 'aws-amplify'
 import * as queries from '../graphql/queries'
+
 
 const sdgs = [{
   name: 1
@@ -87,6 +89,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
+    const { selectedSDG } = this.state
     return (
       <View style={styles.container}>
         <View style={{flex: 1, height: '80%', justifyContent: 'center'}}>
@@ -99,12 +102,13 @@ export default class HomeScreen extends React.Component {
             }
           >
             <Text style={{textAlign: 'center', fontSize: 40}}>
-              SDG count: {this.state.sdgs.length}, {this.state.selectedSDG}
+              SDG count: {this.state.sdgs.length}, {selectedSDG}
             </Text>
             <Text>
-              Selected SDG: {sdgs[this.state.selectedSDG].name}
-              {'\n'}
-              Text text text
+              {SDGs[selectedSDG].title}
+            </Text>
+            <Text>
+              {SDGs[selectedSDG].description}
             </Text>
           </ScrollView>
         </View>

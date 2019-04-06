@@ -19,44 +19,6 @@ const gaussFunc = (x, sigma, mu) => {
 }
 const myGaussFunc = (x) => gaussFunc(x, 1/2/Math.sqrt(2*Math.PI), 0)
 
-// const circles = [{
-//   color: '#e4253c',
-//   title: 'NO POVERTY',
-//   description: 'Economic growth must be inclusive to provide sustainable jobs and promote equality.',
-// }, {
-//   color: 'blue'
-// }, {
-//   color: 'green'
-// }, {
-//   color: 'yellow'
-// }, {
-//   color: 'purple'
-// }, {
-//   color: 'black'
-// }, {
-//   color: 'gray'
-// }, {
-//   color: 'pink'
-// }, {
-//   color: 'lime'
-// }, {
-//   color: 'darkgreen'
-// }, {
-//   color: 'crimson'
-// }, {
-//   color: 'orange'
-// }, {
-//   color: 'cyan'
-// }, {
-//   color: 'navy'
-// }, {
-//   color: 'indigo'
-// }, {
-//   color: 'brown'
-// }, {
-//   color: 'peru'
-// }]
-
 function withFunction(callback) {
   let inputRange = [], outputRange = [], steps = 50;
   /// input range 0-1
