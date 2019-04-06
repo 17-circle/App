@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Text, View, PanResponder, Animated, Dimensions } from 'react-native'
 import styled from 'styled-components'
 import Circle from './Circle'
-import circles from '../constants/SDGs'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -34,6 +33,8 @@ export default class SDGCircle extends Component {
   constructor(props) {
     super(props)
 
+    const { circles } = props
+
     const deltaTheta = 360/circles.length
     const pxPerDeg = 200/120
 
@@ -64,6 +65,7 @@ export default class SDGCircle extends Component {
     nMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
     onMoveShouldSetPanResponder: (event, gestureState) => true,
     onPanResponderGrant: () => {
+      const { circles } = this.props
       const { deltaAnim, thetasAnim, thetas } = this.state
       deltaAnim.setOffset(deltaAnim._value)
       deltaAnim.setValue(0)
@@ -91,6 +93,7 @@ export default class SDGCircle extends Component {
     onPanResponderRelease: (event, gestureState) => {
       const {dx, vx} = gestureState
       const {deltaAnim, thetasAnim, deltaTheta, thetas} = this.state
+      const {circles} = this.props
 
       deltaAnim.flattenOffset()
 
@@ -118,11 +121,15 @@ export default class SDGCircle extends Component {
   })
 
   getIthCircleValue = (dx, deltaAnim) => {
+    const { circles } = this.props
     const selectedCircle = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
     return (selectedCircle)*600/circles.length
   }
 
-  snapOffset = (offset) => { return Math.round(offset / (600/circles.length)) * 600/circles.length; }
+  snapOffset = (offset) => {
+    const {circles} = this.props
+    return Math.round(offset / (600/circles.length)) * 600/circles.length;
+  }
   simplifyOffset = (anim) => {
     if(anim._value + anim._offset >= 600) anim.setOffset(anim._offset - 600)
     if(anim._value + anim._offset <= -600) anim.setOffset(anim._offset + 600)
@@ -140,6 +147,7 @@ export default class SDGCircle extends Component {
 
   render() {
     const {deltaAnim, radius} = this.state
+    const {circles} = this.props
 
     return (
       <Container
