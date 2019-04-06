@@ -178,7 +178,7 @@ export default class SDGCircle extends Component {
           return (
             <Circle
               key={index}
-              color={circle.color}
+              color={circle.unlocked ? circle.color : 'gray'}
               radius={radius}
               style={{
                 left: Math.sin(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),

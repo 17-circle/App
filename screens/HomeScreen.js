@@ -25,14 +25,19 @@ export default class HomeScreen extends React.Component {
   };
 
   state = {
-    sdgs: [],
+    SDGs: SDGs,
     refreshing: true,
     selectedSDG: 0,
   }
 
   componentDidMount = () => {
+    const {SDGs} = this.state
+
     this._getSDGs().then(sdgs => {
-      this.setState({sdgs, refreshing: false})
+      for (sdg of sdgs) {
+        SDGs[sdg.goal-1].unlocked = true
+      }
+      this.setState({SDGs, refreshing: false})
     })
   }
 
@@ -43,6 +48,9 @@ export default class HomeScreen extends React.Component {
   _onRefresh = () => {
     this.setState({ refreshing: true })
     this._getSDGs().then(sdgs => {
+      for (sdg of sdgs) {
+        SDGs[sdg.goal-1].unlocked = true
+      }
       this.setState({sdgs, refreshing: false})
     })
   }
@@ -52,7 +60,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    const { selectedSDG } = this.state
+    const { selectedSDG, SDGs } = this.state
     return (
       <View style={styles.container}>
         <View style={{flex: 1, height: '80%', justifyContent: 'center'}}>
@@ -64,9 +72,6 @@ export default class HomeScreen extends React.Component {
               />
             }
           >
-            <Text style={{textAlign: 'center', fontSize: 40}}>
-              SDG count: {this.state.sdgs.length}, {selectedSDG}
-            </Text>
             <Text>
               {SDGs[selectedSDG].title}
             </Text>
