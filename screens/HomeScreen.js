@@ -14,10 +14,10 @@ import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import SDGCircle from '../components/SDGCircle'
 import SDGs from '../constants/SDGs'
+import styled from 'styled-components'
 
 import { API, graphqlOperation } from 'aws-amplify'
 import * as queries from '../graphql/queries'
-
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -64,7 +64,9 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{flex: 1, height: '80%', justifyContent: 'center'}}>
-          <ScrollView
+          <SDGContainer
+            bgColour={SDGs[selectedSDG].unlocked ? SDGs[selectedSDG].color : 'gray'}
+            contentContainerStyle={{flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -72,13 +74,9 @@ export default class HomeScreen extends React.Component {
               />
             }
           >
-            <Text>
-              {SDGs[selectedSDG].title}
-            </Text>
-            <Text>
-              {SDGs[selectedSDG].description}
-            </Text>
-          </ScrollView>
+            <Title>{SDGs[selectedSDG].title}</Title>
+            <Description>{SDGs[selectedSDG].description}</Description>
+          </SDGContainer>
         </View>
         <SDGCircle onSelect={this.onSelectSDG} circles={SDGs}/>
       </View>
@@ -118,6 +116,21 @@ export default class HomeScreen extends React.Component {
     );
   };
 }
+
+const SDGContainer = styled(ScrollView)`
+  background-color: ${props => props.bgColour};
+  padding: 16px;
+`
+const Title = styled(Text)`
+  text-align: center;
+  font-size: 30px;
+   color: black;
+`
+const Description = styled(Text)`
+  font-size: 20px;
+  text-align: center;
+   color: black;
+`
 
 const styles = StyleSheet.create({
   container: {
