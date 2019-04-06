@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-import { Text, View, PanResponder, Animated, Dimensions } from 'react-native'
+import { Text, View, PanResponder, Animated, Dimensions, Platform } from 'react-native'
 import styled from 'styled-components'
 import Circle from './Circle'
+import { Icon } from 'expo'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-const Container = styled(Animated.View)`
-  margin: auto;
-  width: 200px;
-  height: 200px;
-  position: relative;
-  top: 100px;
-`
 
 const gaussFunc = (x, sigma, mu) => {
   return 1/sigma/Math.sqrt(2.0*Math.PI)*Math.exp(-1.0/2.0*Math.pow((x-mu)/sigma,2))
@@ -109,16 +103,24 @@ export default class SDGCircle extends Component {
 
       // onSelect property
       if(this.props.onSelect) {
-        const iSel = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
-        let xi = iSel
-        if(xi > 16)
-          xi -= circles.length
-        if(xi < 0)
-          xi += circles.length
-        this.props.onSelect(xi)
+        this.props.onSelect(this._selectedCircle())
       }
     }
   })
+
+  _selectedCircle = () => {
+    const {deltaAnim} = this.state
+    const {circles} = this.props
+
+    const iSel = Math.round((deltaAnim._value+deltaAnim._offset)/(600/circles.length))
+    let xi = iSel
+    if(xi > 16)
+      xi -= circles.length
+    if(xi < 0)
+      xi += circles.length
+
+    return xi
+  }
 
   getIthCircleValue = (dx, deltaAnim) => {
     const { circles } = this.props
@@ -150,47 +152,75 @@ export default class SDGCircle extends Component {
     const {circles} = this.props
 
     return (
-      <Container
-        onLayout={this.handleLayout}
-        {...this._panResponder.panHandlers}
-        style={{
-          transform: [{
-            rotate: deltaAnim.interpolate({
-              inputRange: [-200, 0, 200],
-              outputRange: ['-120deg', '0deg', '120deg']
+      <Container>
+        <CircleContainer
+          onLayout={this.handleLayout}
+          {...this._panResponder.panHandlers}
+          style={{
+            transform: [{
+              rotate: deltaAnim.interpolate({
+                inputRange: [-200, 0, 200],
+                outputRange: ['-120deg', '0deg', '120deg']
+              })
+            }]
+          }}
+        >
+          {circles.map((circle, index) => {
+            const {deltaTheta, thetasAnim, Radius} = this.state
+
+            /* const difInPx = index*deltaTheta*200/120 */
+            let i = index
+            /* if(index >= Math.round(circles.length/2)) */
+            /*   i = circles.length - index */
+
+            scale = thetasAnim[i].interpolate({
+              inputRange: [-300, 0, 300],
+              outputRange: [0, 2, 0],
             })
-          }]
-        }}
-      >
-        {circles.map((circle, index) => {
-          const {deltaTheta, thetasAnim, Radius} = this.state
 
-          /* const difInPx = index*deltaTheta*200/120 */
-          let i = index
-          /* if(index >= Math.round(circles.length/2)) */
-          /*   i = circles.length - index */
-
-          scale = thetasAnim[i].interpolate({
-            inputRange: [-300, 0, 300],
-            outputRange: [0, 2, 0],
-          })
-
-          return (
-            <Circle
-              key={index}
-              color={circle.unlocked ? circle.color : 'gray'}
-              radius={radius}
-              style={{
-                left: Math.sin(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
-                top: Math.cos(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
-                transform: [{ scale }],
-              }}
-            >
-              <Text style={{color: 'white'}}>{index+1}</Text>
-            </Circle>
-          )
-        })}
+            return (
+              <Circle
+                key={index}
+                color={circle.unlocked ? circle.color : 'gray'}
+                radius={radius}
+                style={{
+                  left: Math.sin(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
+                  top: Math.cos(index*deltaTheta*Math.PI/180 + Math.PI)*Radius+this.offset(),
+                  transform: [{ scale }],
+                }}
+              >
+                <Text style={{color: 'white'}}>{index+1}</Text>
+              </Circle>
+            )
+          })}
+        </CircleContainer>
+        {!circles[this._selectedCircle()].unlocked
+         ? <Icon.Ionicons
+             name={Platform.OS === 'ios' ? 'ios-unlock' : 'md-unlock'}
+             size={75}
+             color={circles[this._selectedCircle()].color}
+           />
+         : <Icon.Ionicons
+             name={Platform.OS === 'ios' ? 'ios-checkmark' : 'md-checkmark'}
+             size={75}
+             color={circles[this._selectedCircle()].color}
+           />
+        }
       </Container>
     )
   }
 }
+
+const Container = styled(Animated.View)`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`
+
+const CircleContainer = styled(Animated.View)`
+  margin: auto;
+  width: 200px;
+  height: 200px;
+  position: relative;
+  top: 200px;
+`
