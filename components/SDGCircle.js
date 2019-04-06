@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, PanResponder, Animated, Dimensions } from 'react-native'
 import styled from 'styled-components'
 import Circle from './Circle'
+import circles from '../constants/SDGs'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -18,41 +19,43 @@ const gaussFunc = (x, sigma, mu) => {
 }
 const myGaussFunc = (x) => gaussFunc(x, 1/2/Math.sqrt(2*Math.PI), 0)
 
-const circles = [{
-  color: 'red'
-}, {
-  color: 'blue'
-}, {
-  color: 'green'
-}, {
-  color: 'yellow'
-}, {
-  color: 'purple'
-}, {
-  color: 'black'
-}, {
-  color: 'gray'
-}, {
-  color: 'pink'
-}, {
-  color: 'lime'
-}, {
-  color: 'darkgreen'
-}, {
-  color: 'crimson'
-}, {
-  color: 'orange'
-}, {
-  color: 'cyan'
-}, {
-  color: 'navy'
-}, {
-  color: 'indigo'
-}, {
-  color: 'brown'
-}, {
-  color: 'peru'
-}]
+// const circles = [{
+//   color: '#e4253c',
+//   title: 'NO POVERTY',
+//   description: 'Economic growth must be inclusive to provide sustainable jobs and promote equality.',
+// }, {
+//   color: 'blue'
+// }, {
+//   color: 'green'
+// }, {
+//   color: 'yellow'
+// }, {
+//   color: 'purple'
+// }, {
+//   color: 'black'
+// }, {
+//   color: 'gray'
+// }, {
+//   color: 'pink'
+// }, {
+//   color: 'lime'
+// }, {
+//   color: 'darkgreen'
+// }, {
+//   color: 'crimson'
+// }, {
+//   color: 'orange'
+// }, {
+//   color: 'cyan'
+// }, {
+//   color: 'navy'
+// }, {
+//   color: 'indigo'
+// }, {
+//   color: 'brown'
+// }, {
+//   color: 'peru'
+// }]
 
 function withFunction(callback) {
   let inputRange = [], outputRange = [], steps = 50;
