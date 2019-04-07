@@ -25,6 +25,9 @@
     "ios": {
       "supportsTablet": true
     },
+    "android": {
+      "package": "com.seventeen.circle"
+    },
     "description": "",
     "githubUrl": "https://github.com/17-circle/App"
   }
