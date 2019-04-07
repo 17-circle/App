@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Seventeen",
+    "name": "17Circle",
     "slug": "seventeen",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "1.0.0",
     "platforms": [
       "ios",
       "android"
